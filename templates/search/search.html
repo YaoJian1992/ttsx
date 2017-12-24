@@ -1,0 +1,49 @@
+{% extends 'common/base.html' %}
+
+{% load staticfiles %}
+
+
+{% block body %}
+	{% include 'common/status.html' %}
+    <div class="search_bar clearfix">
+		<a href="../goods/index.html" class="logo fl"><img src="{% static 'images/logo.png' %}"></a>
+		<div class="sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;搜索结果</div>
+		{% include 'goods/search.html' %}
+	</div>
+
+	<div class="total_count">全部商品<em>{{ query }}</em></div>
+
+    {% for goods in page %}
+	<ul class="cart_list_td clearfix">
+        {# 给搜索的物品添加超链接 #}
+		<li class="col02"> <a target="_blank" href="{% url 'goods:detail' %}?id={{ goods.object.id }}"><img src="{% static goods.object.goods_img %}"></a></li>
+		<li class="col03"> <a target="_blank" href="{% url 'goods:detail' %}?id={{ goods.object.id }}">{{ goods.object.goods_name }}</a><br></li>
+		<li class="col04">{{ goods.object.goods_unit }}</li>
+		<li class="col05">{{ goods.object.goods_price }}元</li>
+	</ul>
+    {% endfor %}
+    {# 分页显示 #}
+   <div class="pagenation">
+
+        {% if page.has_previous %}
+            <a href="?q={{ query }}&page={{ page.previous_page_number }}">上一页</a>
+        {% else %}
+            <a href="">上一页</a>
+        {% endif %}
+
+        {% for index in paginator.page_range %}
+            {% if index == page.number %}
+                <a href="?q={{ query }}&page={{ index }}" class="active">{{ index }}</a>
+            {% else %}
+                <a href="?q={{ query }}&page={{ index }}">{{ index }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page.has_next %}
+            <a href="?q={{ query }}&page={{ page.next_page_number }}">下一页></a>
+        {% else %}
+            <a href="">下一页</a>
+        {% endif %}
+    </div>
+
+{% endblock body %}

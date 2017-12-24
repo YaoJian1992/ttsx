@@ -1,0 +1,114 @@
+{# 继承父模板 #}
+{% extends 'common/base.html' %}
+
+
+{# 加载标签 #}
+{% load staticfiles %}
+
+{# 头部js #}
+{% block header_js %}
+	<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/slide.js' %}"></script>
+
+{% endblock %}
+
+
+{# 首页主体内容 #}
+{% block body %}
+
+	{# 用户登陆状态 #}
+    {% include 'common/status.html' %}
+
+	<div class="search_bar clearfix">
+		<a href="{% url 'goods:index' %}" class="logo fl"><img src="{% static 'images/logo.png' %}"></a>
+
+        {# 搜索框 #}
+        {% include 'goods/search.html' %}
+
+		<div class="guest_cart fr">
+			<a href="{% url 'cart:index' %}" class="cart_name fl">我的购物车</a>
+			<div class="goods_count fl" id="show_count"  >{{ request.total }}</div>
+		</div>
+	</div>
+
+	<div class="navbar_con">
+		<div class="navbar">
+			<h1 class="fl">全部商品分类</h1>
+			<ul class="navlist fl">
+				<li><a href="">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="">手机生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="">抽奖</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="center_con clearfix">
+		<ul class="subnav fl">
+
+            {% for cag in cags %}
+                <li><a href="#model0{{ cag.id }}" class="{{ cag.goods_css }}">{{ cag.goods_name }}</a></li>
+            {% endfor %}
+		</ul>
+		<div class="slide fl">
+			<ul class="slide_pics">
+
+                {# 中间轮播广告 #}
+                <li><img src="{% static 'images/slide01.jpg' %}" alt="幻灯片"></li>
+				<li><img src="{% static 'images/slide02.jpg' %}" alt="幻灯片"></li>
+				<li><img src="{% static 'images/slide03.jpg' %}" alt="幻灯片"></li>
+				<li><img src="{% static 'images/slide04.jpg' %}" alt="幻灯片"></li>
+
+			</ul>
+			<div class="prev"></div>
+			<div class="next"></div>
+			<ul class="points"></ul>
+		</div>
+		<div class="adv fl">
+
+            {# 右侧活动广告 #}
+{#            {% for a in activity %}#}
+{#                <a href="{{ a.ac_link }}"><img src="{% static a.ac_image %}"></a>#}
+{#            {% endfor %}#}
+            <div class="adv fl">
+			<a href="#"><img src="{% static 'images/adv01.jpg' %}"></a>
+			<a href="#"><img src="{% static 'images/adv02.jpg' %}"></a>
+		</div>
+		</div>
+	</div>
+
+    {# 商品分类的详细信息 #}
+    {% for cag in cags %}
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model01">{{ cag.goods_name }}</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+
+                {% for goods in cag.hot %}
+                    {# 后面带？的参数是商品的id #}
+                    <a href="{% url 'goods:detail' %}?id={{ goods.id }}">{{ goods.goods_name }}</a>
+                {% endfor %}
+
+			</div>
+			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="{% static cag.goods_image %}"></div>
+			<ul class="goods_list fl">
+                {% for goods in cag.new %}
+				<li>
+					<h4><a href="{% url 'goods:detail' %}?id={{ goods.id }}">{{ goods.goods_name }}</a></h4>
+					<a href="{% url 'goods:detail' %}?id={{ goods.id }}"><img src="{% static goods.goods_img %}"></a>
+					<div class="prize">{{ goods.goods_price }}</div>
+				</li>
+                {% endfor %}
+			</ul>
+		</div>
+	</div>
+    {% endfor %}
+
+{% endblock body %}

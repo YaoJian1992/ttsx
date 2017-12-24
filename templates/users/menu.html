@@ -1,0 +1,43 @@
+{#方法一：#}
+{#<div class="left_menu_con clearfix">#}
+{#    <h3>用户中心</h3>#}
+{#    <ul>#}
+{#        {% for menu in menus %}#}
+             {# 注意这里的flag后面要有空格不然也可能解析出错 #}
+{#            {% if menu.menu_flag == flag %}#}
+{#                <li><a href="{{ menu.menu_link }}" class="active">. {{ menu.menu_name }}</a></li>#}
+{#            {% else %}#}
+{#                 <li><a href="{{ menu.menu_link }}">. {{ menu.menu_name }}</a></li>#}
+{#            {% endif %}#}
+{#        {% endfor %}#}
+{#    </ul>#}
+{#</div>#}
+
+{#方法二:通过装饰器让request绑定menus的信息#}
+{#<div class="left_menu_con clearfix">#}
+{#    <h3>用户中心</h3>#}
+{#    <ul>#}
+{#        {% for menu in request.menus %}#}
+             {# 注意这里的flag后面要有空格不然也可能解析出错 #}
+{#            {% if menu.menu_flag == flag %}#}
+{#                <li><a href="{{ menu.menu_link }}" class="active">. {{ menu.menu_name }}</a></li>#}
+{#            {% else %}#}
+{#                 <li><a href="{{ menu.menu_link }}">. {{ menu.menu_name }}</a></li>#}
+{#            {% endif %}#}
+{#        {% endfor %}#}
+{#    </ul>#}
+{#</div>#}
+
+{#方法三:过滤器方式#}
+{#加载自定义的过滤器#}
+{% load users_filters %}
+<div class="left_menu_con clearfix">
+    <h3>用户中心</h3>
+    <ul>
+        {% for menu in flag|get_menu_list %}
+
+                <li><a href="{{ menu.menu_link }}" class="{{ menu.menu_css }}">. {{ menu.menu_name }}</a></li>
+
+        {% endfor %}
+    </ul>
+</div>
